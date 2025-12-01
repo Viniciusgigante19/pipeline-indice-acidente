@@ -1,0 +1,10 @@
+services:
+  python-test:
+    build:
+      context: .
+      dockerfile: docker/testes_python/Dockerfile
+    volumes:
+      - ./src:/app/src
+    working_dir: /app/src
+    stdin_open: true
+    tty: true
