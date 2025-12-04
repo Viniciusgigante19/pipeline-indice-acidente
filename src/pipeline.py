@@ -10,7 +10,7 @@ def load_csv(file_path=CSV_SAMPLE):
     Lê o CSV e retorna um DataFrame Pandas.
     """
     try:
-        df = pd.read_csv(file_path)
+        df = pd.read_csv(file_path, sep=';')
         print(f"CSV carregado com sucesso: {len(df)} linhas")
         return df
     except Exception as e:

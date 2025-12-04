@@ -36,8 +36,8 @@ services:
   # Airflow
   airflow-webserver:
     build:
-      context: ./docker/airflow
-      dockerfile: Dockerfile
+      context: ./docker
+      dockerfile: ./airflow/Dockerfile
     container_name: airflow-webserver
     environment:
       <<: *common-variables
@@ -76,6 +76,16 @@ services:
       - postgres
     networks:
       - data-network
+
+  python-test:
+    build:
+      context: .
+      dockerfile: docker/testes_python/Dockerfile
+    volumes:
+      - ./src:/app/src
+    working_dir: /app/src
+    stdin_open: true
+    tty: true
 
 volumes:
   minio_data:

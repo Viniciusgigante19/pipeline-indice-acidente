@@ -32,5 +32,23 @@ def validate_dataframe(df: pd.DataFrame):
         "null_values": nulls.to_dict(),
         "duplicate_rows": duplicates
     }
-    
+
+def validate_required_columns(df: pd.DataFrame, required_columns: list) -> bool:
+    """Verifica se todas as colunas obrigatórias estão presentes no DataFrame."""
+    missing = set(required_columns) - set(df.columns)
+    if missing:
+        print(f"Colunas obrigatórias ausentes: {missing}")
+        return False
+    return True
+
+def validate_no_nulls(df: pd.DataFrame, required_columns: list) -> bool:
+    """Verifica se não há valores nulos nas colunas obrigatórias."""
+    nulls = df[required_columns].isnull().sum()
+    cols_with_nulls = nulls[nulls > 0]
+    if not cols_with_nulls.empty:
+        print(f"Valores nulos encontrados em colunas críticas: {cols_with_nulls.to_dict()}")
+        return False
+    return True
+
+
     return validation_report

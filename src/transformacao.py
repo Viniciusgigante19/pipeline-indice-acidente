@@ -1,0 +1,1 @@
+# retirar colunas indesejadas do dataframe

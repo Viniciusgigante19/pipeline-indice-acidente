@@ -1,6 +1,6 @@
 # src/pipeline_dag.py
-from src.pipeline import load_csv
-from src.validators import validate_required_columns, validate_no_nulls
+from pipeline import load_csv
+from validators import validate_required_columns, validate_no_nulls
 
 def run_pipeline():
     # 1. Carregar CSV
@@ -8,6 +8,7 @@ def run_pipeline():
     if df.empty:
         print("Pipeline interrompido: CSV vazio ou falha no carregamento.")
         return
+    print("CSV carregado com sucesso.")
 
     # 2. Validações
     required_columns = [
@@ -25,6 +26,10 @@ def run_pipeline():
     # 3. Pipeline continua (limpeza, normalização, análises, etc.)
     print("Validações concluídas. Pipeline pronto para próximos passos.")
     # Aqui você pode adicionar funções de limpeza, normalização ou KPIs
+
+    #retirando colunas desnecessárias
+    df_clean = df[required_columns]
+    
     # por exemplo: df_clean = clean_data(df)
 
 if __name__ == "__main__":
