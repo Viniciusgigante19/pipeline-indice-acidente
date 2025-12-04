@@ -25,9 +25,13 @@ def run_pipeline():
 
     # 3. Pipeline continua (limpeza, normalização, análises, etc.)
     print("Validações concluídas. Pipeline pronto para próximos passos.")
+
+
+
     # Aqui você pode adicionar funções de limpeza, normalização ou KPIs
 
-    #retirando colunas desnecessárias
+
+    #retirando colunas desnecessárias nao terminei
     df_clean = df[required_columns]
     
     # por exemplo: df_clean = clean_data(df)
