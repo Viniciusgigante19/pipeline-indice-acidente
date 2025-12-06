@@ -1,0 +1,60 @@
+=========================
+CHECKLIST PIPELINE ACIDENTES
+=========================
+
+1. Infraestrutura
+[✔] 1.1 Subir MinIO, Postgres, Airflow, Metabase
+[✔] 1.2 Volumes criados (MinIO, Postgres)
+[✔]  1.2.1 Volume para datasets (falta)
+[✔]  1.3 Mapear pasta src no Airflow
+[✔]  1.4 Mapear pasta datasets no Airflow
+[ ]  1.5 Testar comunicação entre containers
+
+2. Organização dos dados
+[ ]  2.1 Validar esquema do dataset
+[ ]  2.2 Criar dicionário de dados
+[ ]  2.3 Definir bucket de dados brutos
+[ ]  2.4 Subir dataset para MinIO
+
+3. Pipeline ETL
+[ ]  3.1 Função de ingestão (MinIO → Python)
+[✔] 3.2 Função de transformação
+[✔] 3.3 Função de validação
+[✔] 3.4 Função de carga para Postgres
+[✔] 3.5 Funções de KPIs
+[ ]  3.6 Criar tabelas no Postgres (DDL)
+
+4. Integração com Airflow
+[ ]  4.1 Criar DAG com tasks individuais
+[ ]  4.2 DAG funcionando dentro do container
+[ ]  4.3 Airflow acessa src
+[ ]  4.4 Configurar dependências
+[ ]  4.5 Testes no Airflow UI
+
+5. Integração com Postgres
+[ ]  5.1 Criar tabelas
+[ ]  5.2 Carregar dados
+[ ]  5.3 Validar integridade
+[ ]  5.4 Criar views para Metabase
+
+6. Visualizações (Metabase)
+[ ]  6.1 Conectar ao Postgres
+[ ]  6.2 Criar dashboards
+[ ]  6.3 Criar gráficos
+[ ]  6.4 Painel final
+
+7. Testes
+[ ]  7.1 Pipeline completo
+[ ]  7.2 Logs Airflow
+[ ]  7.3 Reprocessamento
+[ ]  7.4 KPIs corretos
+[ ]  7.5 Dashboards corretos
+
+8. Documentação
+[ ]  8.1 Arquitetura
+[ ]  8.2 Fluxo do pipeline
+[ ]  8.3 Tecnologias
+[ ]  8.4 Guia de execução
+[ ]  8.5 Decisões técnicas
+[ ]  8.6 Limitações
+[ ]  8.7 Responsabilidades individuais

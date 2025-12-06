@@ -51,6 +51,8 @@ services:
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/config:/opt/airflow/config
+      - ./src:/opt/airflow/src
+      - ./datasets:/opt/airflow/datasets
     ports:
       - "8080:8080"
     depends_on:
@@ -58,6 +60,7 @@ services:
     restart: always
     networks:
       - data-network
+
 
   # Metabase para visualização
   metabase:
@@ -83,6 +86,7 @@ services:
       dockerfile: docker/testes_python/Dockerfile
     volumes:
       - ./src:/app/src
+      - ./datasets:/datasets
     working_dir: /app/src
     stdin_open: true
     tty: true
@@ -90,6 +94,7 @@ services:
 volumes:
   minio_data:
   postgres_data:
+  datasets_data:
 
 networks:
   data-network:
