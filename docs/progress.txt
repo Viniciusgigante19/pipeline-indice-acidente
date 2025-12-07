@@ -11,8 +11,8 @@ CHECKLIST PIPELINE ACIDENTES
 [✔]  1.5 Testar comunicação entre containers
 
 2. Organização dos dados
-[ ]  2.1 Validar esquema do dataset
-[ ]  2.2 Criar dicionário de dados
+[✔]  2.1 Validar esquema do dataset
+[✔]  2.2 Criar dicionário de dados
 [ ]  2.3 Definir bucket de dados brutos
 [ ]  2.4 Subir dataset para MinIO
 

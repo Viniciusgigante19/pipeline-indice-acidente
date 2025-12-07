@@ -1,0 +1,36 @@
+==========================
+ESQUEMA CSV - DATATRAN 2025
+===========================
+
+| Coluna                   | Tipo Estimado | Observações / Como Usar                                               |
+| ------------------------ | ------------- | --------------------------------------------------------------------- |
+| `id`                     | int           | Identificador único da linha                                          |
+| `data_inversa`           | date / string | Data do acidente (YYYY-MM-DD)                                         |
+| `dia_semana`             | string        | Nome do dia da semana                                                 |
+| `horario`                | time / string | Horário do acidente (HH:MM:SS)                                        |
+| `uf`                     | string        | Unidade federativa (ex.: SP, CE)                                      |
+| `br`                     | int           | Número da rodovia                                                     |
+| `km`                     | float         | Ponto quilométrico da rodovia                                         |
+| `municipio`              | string        | Nome do município                                                     |
+| `causa_acidente`         | string        | Causa do acidente                                                     |
+| `tipo_acidente`          | string        | Ex.: Colisão frontal, Tombamento                                      |
+| `classificacao_acidente` | string        | Ex.: Com vítimas feridas, Com vítimas fatais                          |
+| `fase_dia`               | string        | Pleno dia, Anoitecer, etc.                                            |
+| `sentido_via`            | string        | Crescente, Decrescente                                                |
+| `condicao_metereologica` | string        | Ex.: Céu Claro, Chuva, Nublado                                        |
+| `tipo_pista`             | string        | Simples, Dupla, etc.                                                  |
+| `tracado_via`            | string        | Reta, Curva, Declive, Aclive; pode ser múltiplo (ex.: "Reta;Declive") |
+| `uso_solo`               | string        | Sim / Não                                                             |
+| `pessoas`                | int           | Total de pessoas envolvidas                                           |
+| `mortos`                 | int           | Número de mortos                                                      |
+| `feridos_leves`          | int           | Número de feridos leves                                               |
+| `feridos_graves`         | int           | Número de feridos graves                                              |
+| `ilesos`                 | int           | Número de ilesos                                                      |
+| `ignorados`              | int           | Número de ignorados ou não informados                                 |
+| `feridos`                | int           | Total de feridos (soma interna possível)                              |
+| `veiculos`               | int           | Número de veículos envolvidos                                         |
+| `latitude`               | float         | Coordenada geográfica                                                 |
+| `longitude`              | float         | Coordenada geográfica                                                 |
+| `regional`               | string        | Regional responsável                                                  |
+| `delegacia`              | string        | Código da delegacia                                                   |
+| `uop`                    | string        | Unidade operacional policial                                          |

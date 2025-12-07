@@ -118,6 +118,8 @@ services:
     working_dir: /app/src
     stdin_open: true
     tty: true
+    networks:
+    - data-network
 
 volumes:
   minio_data:
