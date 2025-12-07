@@ -22,10 +22,10 @@ CHECKLIST PIPELINE ACIDENTES
 [✔] 3.3 Função de validação
 [✔] 3.4 Função de carga para Postgres
 [✔] 3.5 Funções de KPIs
-[ ]  3.6 Criar tabelas no Postgres (DDL)
+[✔]  3.6 Criar tabelas no Postgres (DDL)
 
 4. Integração com Airflow
-[ ]  4.1 Criar DAG com tasks individuais
+[✔]  4.1 Criar DAG com tasks individuais
 [ ]  4.2 DAG funcionando dentro do container
 [ ]  4.3 Airflow acessa src
 [ ]  4.4 Configurar dependências

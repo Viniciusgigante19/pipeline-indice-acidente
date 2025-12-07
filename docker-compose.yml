@@ -47,6 +47,7 @@ services:
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
       AIRFLOW_UID: ${AIRFLOW_UID}
       AIRFLOW_GID: ${AIRFLOW_GID}
+      PYTHONPATH: /opt/airflow/src
     command: ["airflow", "webserver"]
     volumes:
       - ./airflow/dags:/opt/airflow/dags
