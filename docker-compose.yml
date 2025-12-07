@@ -33,7 +33,7 @@ services:
     networks:
       - data-network
 
-  # Airflow
+  # Airflow Webserver
   airflow-webserver:
     build:
       context: ./docker
@@ -46,6 +46,7 @@ services:
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
       AIRFLOW_UID: ${AIRFLOW_UID}
       AIRFLOW_GID: ${AIRFLOW_GID}
+    command: ["airflow", "webserver"]
     volumes:
       - ./airflow/dags:/opt/airflow/dags
       - ./airflow/logs:/opt/airflow/logs
@@ -61,6 +62,32 @@ services:
     networks:
       - data-network
 
+  # Airflow Scheduler
+  airflow-scheduler:
+    build:
+      context: ./docker
+      dockerfile: ./airflow/Dockerfile
+    container_name: airflow-scheduler
+    environment:
+      <<: *common-variables
+      AIRFLOW__CORE__EXECUTOR: ${AIRFLOW__CORE__EXECUTOR}
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
+      AIRFLOW_UID: ${AIRFLOW_UID}
+      AIRFLOW_GID: ${AIRFLOW_GID}
+    command: ["airflow", "scheduler"]
+    volumes:
+      - ./airflow/dags:/opt/airflow/dags
+      - ./airflow/logs:/opt/airflow/logs
+      - ./airflow/plugins:/opt/airflow/plugins
+      - ./airflow/config:/opt/airflow/config
+      - ./src:/opt/airflow/src
+      - ./datasets:/opt/airflow/datasets
+    depends_on:
+      - postgres
+    restart: always
+    networks:
+      - data-network
 
   # Metabase para visualização
   metabase:
@@ -80,6 +107,7 @@ services:
     networks:
       - data-network
 
+  # Container para testes em Python
   python-test:
     build:
       context: .

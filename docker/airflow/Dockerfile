@@ -37,10 +37,20 @@ COPY ./config/airflow.cfg /opt/airflow/config/airflow.cfg
 
 # Cria usuário airflow para rodar o serviço
 RUN useradd -ms /bin/bash airflow && chown -R airflow: /opt/airflow
+
+# Copia entrypoint customizado
+COPY ./airflow/entrypoint.sh /entrypoint.sh
+
+RUN chmod +x /entrypoint.sh
+
+# Troca para usuário airflow
 USER airflow
 
 # Define diretório de trabalho
 WORKDIR /opt/airflow
 
-# Comando padrão (pode ser sobrescrito no docker-compose)
-CMD ["airflow", "version"]
+# Define entrypoint customizado
+ENTRYPOINT ["/entrypoint.sh"]
+
+# Comando padrão (sobrescrito pelo docker-compose se necessário)
+CMD ["airflow", "webserver"]

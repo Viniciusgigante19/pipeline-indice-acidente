@@ -8,7 +8,7 @@ CHECKLIST PIPELINE ACIDENTES
 [✔]  1.2.1 Volume para datasets (falta)
 [✔]  1.3 Mapear pasta src no Airflow
 [✔]  1.4 Mapear pasta datasets no Airflow
-[ ]  1.5 Testar comunicação entre containers
+[✔]  1.5 Testar comunicação entre containers
 
 2. Organização dos dados
 [ ]  2.1 Validar esquema do dataset
