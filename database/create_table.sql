@@ -1,0 +1,35 @@
+-- create_tables.sql
+-- Criação da tabela de acidentes de trânsito 2025
+
+CREATE TABLE IF NOT EXISTS datatran2025 (
+    id SERIAL PRIMARY KEY,
+    data_inversa DATE,
+    dia_semana TEXT,
+    horario TIME,
+    uf TEXT,
+    br INT,
+    km FLOAT,
+    municipio TEXT,
+    causa_acidente TEXT,
+    tipo_acidente TEXT,
+    classificacao_acidente TEXT,
+    fase_dia TEXT,
+    sentido_via TEXT,
+    condicao_metereologica TEXT,
+    tipo_pista TEXT,
+    tracado_via TEXT,
+    uso_solo BOOLEAN,
+    pessoas INT,
+    mortos INT,
+    feridos_leves INT,
+    feridos_graves INT,
+    ilesos INT,
+    ignorados INT,
+    feridos INT,
+    veiculos INT,
+    latitude FLOAT,
+    longitude FLOAT,
+    regional TEXT,
+    delegacia TEXT,
+    uop TEXT
+);
