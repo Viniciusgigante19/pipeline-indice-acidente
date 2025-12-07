@@ -13,11 +13,11 @@ CHECKLIST PIPELINE ACIDENTES
 2. Organização dos dados
 [✔]  2.1 Validar esquema do dataset
 [✔]  2.2 Criar dicionário de dados
-[ ]  2.3 Definir bucket de dados brutos
-[ ]  2.4 Subir dataset para MinIO
+[✔]  2.3 Definir bucket de dados brutos
+[✔]  2.4 Subir dataset para MinIO
 
 3. Pipeline ETL
-[ ]  3.1 Função de ingestão (MinIO → Python)
+[✔]  3.1 Função de ingestão (MinIO → Python)
 [✔] 3.2 Função de transformação
 [✔] 3.3 Função de validação
 [✔] 3.4 Função de carga para Postgres
