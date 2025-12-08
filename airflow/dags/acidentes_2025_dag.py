@@ -5,8 +5,8 @@ from airflow.operators.python import PythonOperator
 
 # Importando funções do ETL já existentes
 from src.pipeline import load_csv
-from transformacao import validate_required_columns, validate_no_nulls
-from src.kpis import calcular_kpis  # substitua pelo nome real da função de KPI
+from src.transformacao import validate_columns, validate_nulls
+from src.kpis import acidentes_por_periodo  # função escolhida para KPIs
 
 # Colunas obrigatórias do CSV DATATRAN 2025
 REQUIRED_COLUMNS = [
@@ -44,17 +44,18 @@ REQUIRED_COLUMNS = [
 
 # Funções intermediárias para tasks
 def task_ingest(**context):
-    df = load_csv()
+    df = load_csv("/opt/airflow/datasets/datatran2025.csv")  # caminho absoluto dentro do contêiner
     context['ti'].xcom_push(key='df', value=df)
 
 def task_validate_columns(**context):
     df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
-    if not validate_required_columns(df, REQUIRED_COLUMNS):
-        raise ValueError("Colunas obrigatórias ausentes")
+    missing, extra, duplicates = validate_columns(df)
+    if missing:
+        raise ValueError(f"Colunas obrigatórias ausentes: {missing}")
 
 def task_validate_nulls(**context):
     df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
-    if not validate_no_nulls(df, REQUIRED_COLUMNS):
+    if not validate_nulls(df):
         raise ValueError("Valores nulos encontrados em colunas críticas")
 
 def task_clean(**context):
@@ -64,7 +65,8 @@ def task_clean(**context):
 
 def task_kpis(**context):
     df_clean = context['ti'].xcom_pull(key='df_clean', task_ids='clean_task')
-    calcular_kpis(df_clean)
+    resultados = acidentes_por_periodo(df_clean)
+    print(resultados)
 
 # Definição da DAG
 with DAG(
