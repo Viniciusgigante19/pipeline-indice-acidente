@@ -21,18 +21,25 @@ services:
       - data-network
 
   # PostgreSQL
-  postgres:
-    image: postgres:13
-    container_name: postgres
-    environment:
-      <<: *common-variables
-    ports:
-      - "${POSTGRES_PORT}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database:/docker-entrypoint-initdb.d
-    networks:
-      - data-network
+postgres:
+  image: postgres:13
+  container_name: postgres
+  environment:
+    <<: *common-variables
+  ports:
+    - "${POSTGRES_PORT}:5432"
+  volumes:
+    - postgres_data:/var/lib/postgresql/data
+    - ./database:/docker-entrypoint-initdb.d
+  networks:
+    - data-network
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+    interval: 5s
+    timeout: 5s
+    retries: 6
+    start_period: 30s
+
 
   # Airflow Webserver
   airflow-webserver:
@@ -50,11 +57,11 @@ services:
       PYTHONPATH: /opt/airflow/src
     command: ["airflow", "webserver"]
     volumes:
-      - ./airflow/dags:/opt/airflow/dags
+      - ./src:/home/airflow/airflow/dags
+      - ./src:/opt/airflow/src
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/config:/opt/airflow/config
-      - ./src:/opt/airflow/src
       - ./datasets:/opt/airflow/datasets
     ports:
       - "8080:8080"
@@ -77,13 +84,14 @@ services:
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
       AIRFLOW_UID: ${AIRFLOW_UID}
       AIRFLOW_GID: ${AIRFLOW_GID}
+      PYTHONPATH: /opt/airflow/src
     command: ["airflow", "scheduler"]
     volumes:
-      - ./airflow/dags:/opt/airflow/dags
+      - ./src:/home/airflow/airflow/dags
+      - ./src:/opt/airflow/src
       - ./airflow/logs:/opt/airflow/logs
       - ./airflow/plugins:/opt/airflow/plugins
       - ./airflow/config:/opt/airflow/config
-      - ./src:/opt/airflow/src
       - ./datasets:/opt/airflow/datasets
     depends_on:
       - postgres
@@ -121,8 +129,7 @@ services:
     stdin_open: true
     tty: true
     networks:
-    - data-network
-
+      - data-network
     environment:
       - MINIO_ROOT_USER=${MINIO_ROOT_USER}
       - MINIO_ROOT_PASSWORD=${MINIO_ROOT_PASSWORD}

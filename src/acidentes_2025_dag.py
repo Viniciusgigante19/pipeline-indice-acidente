@@ -1,65 +1,112 @@
-# src/pipeline_dag.py
-from pipeline import load_csv
-from transformacao import validate_required_columns, validate_no_nulls
+# airflow/dags/acidentes_2025_dag.py
+from datetime import datetime
+from airflow import DAG
+from airflow.operators.python import PythonOperator
 
-def run_pipeline():
-    # 1. Carregar CSV
-    df = load_csv()
-    if df.empty:
-        print("Pipeline interrompido: CSV vazio ou falha no carregamento.")
-        return
-    print("CSV carregado com sucesso.")
+# Importando funções do ETL já existentes
+from src.pipeline import load_csv
+from src.transformacao import validate_columns, validate_nulls
+from src.kpis import acidentes_por_periodo  # função escolhida para KPIs
 
-    # 2. Validações (todas as colunas reais do CSV DATATRAN 2025)
-    required_columns = [
-        "id",
-        "data_inversa",
-        "dia_semana",
-        "horario",
-        "uf",
-        "br",
-        "km",
-        "municipio",
-        "causa_acidente",
-        "tipo_acidente",
-        "classificacao_acidente",
-        "fase_dia",
-        "sentido_via",
-        "condicao_metereologica",
-        "tipo_pista",
-        "tracado_via",
-        "uso_solo",
-        "pessoas",
-        "mortos",
-        "feridos_leves",
-        "feridos_graves",
-        "ilesos",
-        "ignorados",
-        "feridos",
-        "veiculos",
-        "latitude",
-        "longitude",
-        "regional",
-        "delegacia",
-        "uop"
-    ]
+# Colunas obrigatórias do CSV DATATRAN 2025
+REQUIRED_COLUMNS = [
+    "id",
+    "data_inversa",
+    "dia_semana",
+    "horario",
+    "uf",
+    "br",
+    "km",
+    "municipio",
+    "causa_acidente",
+    "tipo_acidente",
+    "classificacao_acidente",
+    "fase_dia",
+    "sentido_via",
+    "condicao_metereologica",
+    "tipo_pista",
+    "tracado_via",
+    "uso_solo",
+    "pessoas",
+    "mortos",
+    "feridos_leves",
+    "feridos_graves",
+    "ilesos",
+    "ignorados",
+    "feridos",
+    "veiculos",
+    "latitude",
+    "longitude",
+    "regional",
+    "delegacia",
+    "uop"
+]
 
-    if not validate_required_columns(df, required_columns):
-        print("Pipeline interrompido: colunas obrigatórias ausentes.")
-        return
+# Funções intermediárias para tasks
+def task_ingest(**context):
+    df = load_csv("/opt/airflow/datasets/datatran2025.csv")  # caminho absoluto dentro do contêiner
+    context['ti'].xcom_push(key='df', value=df)
 
-    if not validate_no_nulls(df, required_columns):
-        print("Pipeline interrompido: existem valores nulos em colunas críticas.")
-        return
+def task_validate_columns(**context):
+    df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
+    missing, extra, duplicates = validate_columns(df)
+    if missing:
+        raise ValueError(f"Colunas obrigatórias ausentes: {missing}")
 
-    # 3. Pipeline continua (limpeza, normalização, análises, etc.)
-    print("Validações concluídas. Pipeline pronto para próximos passos.")
+def task_validate_nulls(**context):
+    df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
+    if not validate_nulls(df):
+        raise ValueError("Valores nulos encontrados em colunas críticas")
 
-    # Exemplo: dataset reduzido com apenas as colunas do schema
-    df_clean = df[required_columns]
+def task_clean(**context):
+    df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
+    df_clean = df[REQUIRED_COLUMNS]
+    context['ti'].xcom_push(key='df_clean', value=df_clean)
 
-    # Aqui você continua com limpeza, normalização, KPIs, etc.
-    # Exemplo: df_clean = clean_data(df)
+def task_kpis(**context):
+    df_clean = context['ti'].xcom_pull(key='df_clean', task_ids='clean_task')
+    resultados = acidentes_por_periodo(df_clean)
+    print(resultados)
 
-if __name__ == "__main__":
-    run_pipeline()
+# Definição da DAG
+with DAG(
+    dag_id='acidentes_2025_dag',
+    description='Pipeline de acidentes 2025 com tasks separadas',
+    schedule_interval='@daily',
+    start_date=datetime(2025, 1, 1),
+    catchup=False,
+    tags=['pipeline', 'acidentes', '2025']
+) as dag:
+
+    ingest_task = PythonOperator(
+        task_id='ingest_task',
+        python_callable=task_ingest,
+        provide_context=True
+    )
+
+    validate_columns_task = PythonOperator(
+        task_id='validate_columns_task',
+        python_callable=task_validate_columns,
+        provide_context=True
+    )
+
+    validate_nulls_task = PythonOperator(
+        task_id='validate_nulls_task',
+        python_callable=task_validate_nulls,
+        provide_context=True
+    )
+
+    clean_task = PythonOperator(
+        task_id='clean_task',
+        python_callable=task_clean,
+        provide_context=True
+    )
+
+    kpis_task = PythonOperator(
+        task_id='kpis_task',
+        python_callable=task_kpis,
+        provide_context=True
+    )
+
+    # Encadeamento
+    ingest_task >> validate_columns_task >> validate_nulls_task >> clean_task >> kpis_task
