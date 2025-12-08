@@ -44,7 +44,7 @@ COPY ./airflow/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Troca para usuário airflow
-USER airflow
+USER root
 
 # Define diretório de trabalho
 WORKDIR /opt/airflow

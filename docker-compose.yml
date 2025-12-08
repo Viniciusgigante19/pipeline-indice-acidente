@@ -21,80 +21,75 @@ services:
       - data-network
 
   # PostgreSQL
-postgres:
-  image: postgres:13
-  container_name: postgres
-  environment:
-    <<: *common-variables
-  ports:
-    - "${POSTGRES_PORT}:5432"
-  volumes:
-    - postgres_data:/var/lib/postgresql/data
-    - ./database:/docker-entrypoint-initdb.d
-  networks:
-    - data-network
-  healthcheck:
-    test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
-    interval: 5s
-    timeout: 5s
-    retries: 6
-    start_period: 30s
+  postgres:
+    image: postgres:13
+    container_name: postgres
+    environment:
+      <<: *common-variables
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database:/docker-entrypoint-initdb.d
+    networks:
+      - data-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
 
+  # Airflow Init (roda apenas uma vez para inicializar o banco)
+  airflow-init:
+    image: apache/airflow:2.9.1
+    container_name: airflow-init
+    environment:
+      <<: *common-variables
+      AIRFLOW__CORE__EXECUTOR: ${AIRFLOW__CORE__EXECUTOR}
+      AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
+    entrypoint: ["airflow", "db", "init"]
+    depends_on:
+      - postgres
+    networks:
+      - data-network
+    restart: "no"
 
   # Airflow Webserver
   airflow-webserver:
-    build:
-      context: ./docker
-      dockerfile: ./airflow/Dockerfile
+    image: apache/airflow:2.9.1
     container_name: airflow-webserver
     environment:
       <<: *common-variables
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW__CORE__EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
-      AIRFLOW_UID: ${AIRFLOW_UID}
-      AIRFLOW_GID: ${AIRFLOW_GID}
-      PYTHONPATH: /opt/airflow/src
     command: ["airflow", "webserver"]
     volumes:
-      - ./src:/home/airflow/airflow/dags
-      - ./src:/opt/airflow/src
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
-      - ./airflow/config:/opt/airflow/config
-      - ./datasets:/opt/airflow/datasets
+      - ./src:/opt/airflow/dags
     ports:
       - "8080:8080"
     depends_on:
-      - postgres
+      - airflow-init
     restart: always
     networks:
       - data-network
 
   # Airflow Scheduler
   airflow-scheduler:
-    build:
-      context: ./docker
-      dockerfile: ./airflow/Dockerfile
+    image: apache/airflow:2.9.1
     container_name: airflow-scheduler
     environment:
       <<: *common-variables
       AIRFLOW__CORE__EXECUTOR: ${AIRFLOW__CORE__EXECUTOR}
       AIRFLOW__CORE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
-      AIRFLOW_UID: ${AIRFLOW_UID}
-      AIRFLOW_GID: ${AIRFLOW_GID}
-      PYTHONPATH: /opt/airflow/src
     command: ["airflow", "scheduler"]
     volumes:
-      - ./src:/home/airflow/airflow/dags
-      - ./src:/opt/airflow/src
-      - ./airflow/logs:/opt/airflow/logs
-      - ./airflow/plugins:/opt/airflow/plugins
-      - ./airflow/config:/opt/airflow/config
-      - ./datasets:/opt/airflow/datasets
+      - ./src:/opt/airflow/dags
     depends_on:
-      - postgres
+      - airflow-init
     restart: always
     networks:
       - data-network
