@@ -2,15 +2,16 @@
 import pandas as pd
 from pathlib import Path
 
+# Caminho para a pasta de datasets
 DATASET_DIR = Path(__file__).parent.parent / "datasets"
 CSV_SAMPLE = DATASET_DIR / "datatran2025_amostra_100.csv"
 
 def load_csv(file_path=CSV_SAMPLE):
     """
-    Lê o CSV e retorna um DataFrame Pandas.
+    Lê o CSV e retorna um DataFrame Pandas usando encoding ISO-8859-1.
     """
     try:
-        df = pd.read_csv(file_path, sep=';')
+        df = pd.read_csv(file_path, sep=';', encoding="iso-8859-1")
         print(f"CSV carregado com sucesso: {len(df)} linhas")
         return df
     except Exception as e:

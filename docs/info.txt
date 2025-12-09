@@ -1,0 +1,17 @@
+✅ 1. UTF-8
+
+Nome completo: UTF-8 (Unicode Transformation Format — 8-bit)
+
+Identificador comum no Pandas: "utf-8"
+
+✅ 2. ISO-8859-1
+
+Nome completo: ISO-8859-1 (Latin-1)
+
+Identificador comum no Pandas: "iso-8859-1"
+
+✅ 3. Windows-1252
+
+Nome completo: Windows-1252 (CP1252 — Western European)
+
+Identificador comum no Pandas: "cp1252"
