@@ -17,6 +17,7 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - minio_data:/data
+      - ./datasets:/opt/airflow/datasets
     networks:
       - data-network
 
@@ -68,6 +69,7 @@ services:
     command: ["airflow", "webserver"]
     volumes:
       - ./src:/opt/airflow/dags
+      - ./datasets:/opt/airflow/datasets
     ports:
       - "8080:8080"
     depends_on:
@@ -88,6 +90,7 @@ services:
     command: ["airflow", "scheduler"]
     volumes:
       - ./src:/opt/airflow/dags
+      - ./datasets:/opt/airflow/datasets
     depends_on:
       - airflow-init
     restart: always
