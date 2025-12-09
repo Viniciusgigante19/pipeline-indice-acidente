@@ -4,9 +4,9 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 
 # Importando funções do ETL já existentes
-from src.pipeline import load_csv
-from src.transformacao import validate_columns, validate_nulls
-from src.kpis import acidentes_por_periodo  # função escolhida para KPIs
+from pipeline import load_csv
+from transformacao import validate_columns, validate_nulls
+from kpis import acidentes_por_periodo
 
 # Colunas obrigatórias do CSV DATATRAN 2025
 REQUIRED_COLUMNS = [
