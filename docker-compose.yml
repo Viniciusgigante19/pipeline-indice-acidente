@@ -70,6 +70,7 @@ services:
     volumes:
       - ./src:/opt/airflow/dags
       - ./datasets:/opt/airflow/datasets
+      - ./logs:/opt/airflow/logs
     ports:
       - "8080:8080"
     depends_on:
@@ -91,6 +92,7 @@ services:
     volumes:
       - ./src:/opt/airflow/dags
       - ./datasets:/opt/airflow/datasets
+      - ./logs:/opt/airflow/logs
     depends_on:
       - airflow-init
     restart: always

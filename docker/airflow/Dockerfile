@@ -27,7 +27,8 @@ RUN pip install --no-cache-dir \
     pandas \
     numpy \
     pyarrow \
-    boto3
+    boto3 \
+    minio
 
 # Cria diretório de configuração do Airflow
 RUN mkdir -p /opt/airflow/config
