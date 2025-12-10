@@ -1,27 +1,35 @@
-import boto3
-from botocore.client import Config
+# src/testes/test_minio.py
 import os
+from minio import Minio
+from minio.error import S3Error
 
 # pegar credenciais do ambiente
-MINIO_USER = os.environ.get('MINIO_ROOT_USER')
-MINIO_PASS = os.environ.get('MINIO_ROOT_PASSWORD')
+MINIO_USER = os.getenv("MINIO_ROOT_USER", "admin")
+MINIO_PASS = os.getenv("MINIO_ROOT_PASSWORD", "password123")
+MINIO_PORT = os.getenv("MINIO_PORT", "9000")
+MINIO_HOST = f"minio:{MINIO_PORT}"
 
-s3 = boto3.resource(
-    's3',
-    endpoint_url='http://minio:9000',
-    aws_access_key_id=MINIO_USER,
-    aws_secret_access_key=MINIO_PASS,
-    config=Config(signature_version='s3v4'),
-    region_name='us-east-1'
-)
+BUCKET_NAME = "acidentes"
+FILE_NAME = "datatran2025_amostra_100.csv"
+DOWNLOAD_PATH = f"/app/src/{FILE_NAME}"
 
-# listar buckets
-print("Buckets disponíveis:")
-for bucket in s3.buckets.all():
-    print(bucket.name)
+def main():
+    client = Minio(
+        MINIO_HOST,
+        access_key=MINIO_USER,
+        secret_key=MINIO_PASS,
+        secure=False
+    )
 
-# exemplo de download de arquivo
-bucket_name = 'dados-brutos'
-file_name = 'datatran2025_amostra_1000.csv'
-s3.Bucket(bucket_name).download_file(file_name, f'/app/src/{file_name}')
-print(f"Arquivo {file_name} baixado com sucesso!")
+    print("Buckets disponíveis:")
+    for bucket in client.list_buckets():
+        print(bucket.name)
+
+    try:
+        client.fget_object(BUCKET_NAME, FILE_NAME, DOWNLOAD_PATH)
+        print(f"Arquivo {FILE_NAME} baixado com sucesso em {DOWNLOAD_PATH}!")
+    except S3Error as e:
+        print(f"Erro ao baixar arquivo: {e}")
+
+if __name__ == "__main__":
+    main()

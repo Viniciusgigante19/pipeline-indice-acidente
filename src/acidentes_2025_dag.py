@@ -1,77 +1,74 @@
 # airflow/dags/acidentes_2025_dag.py
+
+import sys
+sys.path.append("/opt/airflow/dags")
+
 from datetime import datetime
 from airflow import DAG
 from airflow.operators.python import PythonOperator
+from minio import Minio
+import os
+import pandas as pd
 
 # Importando funções do ETL já existentes
 from pipeline import load_csv
-from transformacao import validate_columns, validate_nulls
+from transformacao import transform_pipeline   # usamos o pipeline completo
 from kpis import acidentes_por_periodo
 
-# Colunas obrigatórias do CSV DATATRAN 2025
-REQUIRED_COLUMNS = [
-    "id",
-    "data_inversa",
-    "dia_semana",
-    "horario",
-    "uf",
-    "br",
-    "km",
-    "municipio",
-    "causa_acidente",
-    "tipo_acidente",
-    "classificacao_acidente",
-    "fase_dia",
-    "sentido_via",
-    "condicao_metereologica",
-    "tipo_pista",
-    "tracado_via",
-    "uso_solo",
-    "pessoas",
-    "mortos",
-    "feridos_leves",
-    "feridos_graves",
-    "ilesos",
-    "ignorados",
-    "feridos",
-    "veiculos",
-    "latitude",
-    "longitude",
-    "regional",
-    "delegacia",
-    "uop"
-]
+# Função utilitária para inicializar o client MinIO
+def get_minio_client():
+    return Minio(
+        "minio:9000",  # nome do serviço no docker-compose
+        access_key=os.getenv("MINIO_ROOT_USER"),
+        secret_key=os.getenv("MINIO_ROOT_PASSWORD"),
+        secure=False
+    )
 
 # Funções intermediárias para tasks
 def task_ingest(**context):
-    df = load_csv("/opt/airflow/datasets/datatran2025.csv")  # caminho absoluto dentro do contêiner
-    context['ti'].xcom_push(key='df', value=df)
+    raw_path = "/opt/airflow/datasets/datatran2025_amostra_100.csv"
+    df = load_csv(raw_path)
 
-def task_validate_columns(**context):
-    df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
-    missing, extra, duplicates = validate_columns(df)
-    if missing:
-        raise ValueError(f"Colunas obrigatórias ausentes: {missing}")
+    # salva cópia em sandbox (nunca sobrescreve o bruto)
+    sandbox_path = "/opt/airflow/sandbox/datatran2025_amostra_ingest.csv"
+    df.to_csv(sandbox_path, index=False)
 
-def task_validate_nulls(**context):
-    df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
-    if not validate_nulls(df):
-        raise ValueError("Valores nulos encontrados em colunas críticas")
+    # envia para MinIO a cópia
+    client = get_minio_client()
+    client.fput_object("acidentes", "datatran2025_amostra_ingest.csv", sandbox_path)
 
 def task_clean(**context):
-    df = context['ti'].xcom_pull(key='df', task_ids='ingest_task')
-    df_clean = df[REQUIRED_COLUMNS]
-    context['ti'].xcom_push(key='df_clean', value=df_clean)
+    client = get_minio_client()
+    local_path = "/opt/airflow/sandbox/datatran2025_amostra_ingest.csv"
+    client.fget_object("acidentes", "datatran2025_amostra_ingest.csv", local_path)
+
+    # usa o pipeline completo de transformação
+    df_clean = transform_pipeline(local_path)
+
+    # salva dentro do sandbox
+    sandbox_clean = "/opt/airflow/sandbox/df_clean.csv"
+    df_clean.to_csv(sandbox_clean, index=False)
+
+    # salva também no volume acessível ao host (outputs)
+    path_output = "/opt/airflow/outputs/df_clean.csv"
+    df_clean.to_csv(path_output, index=False)
+
+    # envia para MinIO usando o arquivo salvo
+    client.fput_object("acidentes", "df_clean.csv", sandbox_clean)
 
 def task_kpis(**context):
-    df_clean = context['ti'].xcom_pull(key='df_clean', task_ids='clean_task')
+    client = get_minio_client()
+    local_path = "/opt/airflow/sandbox/df_clean.csv"
+    client.fget_object("acidentes", "df_clean.csv", local_path)
+
+    df_clean = pd.read_csv(local_path)
     resultados = acidentes_por_periodo(df_clean)
     print(resultados)
 
 # Definição da DAG
 with DAG(
     dag_id='acidentes_2025_dag',
-    description='Pipeline de acidentes 2025 com tasks separadas',
+    description='Pipeline de acidentes 2025 com tasks separadas e integração com MinIO',
     schedule_interval='@daily',
     start_date=datetime(2025, 1, 1),
     catchup=False,
@@ -81,18 +78,6 @@ with DAG(
     ingest_task = PythonOperator(
         task_id='ingest_task',
         python_callable=task_ingest,
-        provide_context=True
-    )
-
-    validate_columns_task = PythonOperator(
-        task_id='validate_columns_task',
-        python_callable=task_validate_columns,
-        provide_context=True
-    )
-
-    validate_nulls_task = PythonOperator(
-        task_id='validate_nulls_task',
-        python_callable=task_validate_nulls,
         provide_context=True
     )
 
@@ -109,4 +94,4 @@ with DAG(
     )
 
     # Encadeamento
-    ingest_task >> validate_columns_task >> validate_nulls_task >> clean_task >> kpis_task
+    ingest_task >> clean_task >> kpis_task

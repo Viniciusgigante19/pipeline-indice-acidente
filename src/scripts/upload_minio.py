@@ -1,37 +1,40 @@
+# src/scripts/upload_minio.py
 import os
-import boto3
-from botocore.client import Config
+from minio import Minio
+from minio.error import S3Error
 
 # Carregar variáveis de ambiente (assume que já estão exportadas no container)
 MINIO_USER = os.getenv("MINIO_ROOT_USER", "admin")
 MINIO_PASSWORD = os.getenv("MINIO_ROOT_PASSWORD", "password123")
 MINIO_PORT = os.getenv("MINIO_PORT", "9000")
-MINIO_HOST = f"http://minio:{MINIO_PORT}"  # Nome do serviço no Docker Compose
-DATASET_PATH = "/datasets/datatran2025_amostra_1000.csv"
-BUCKET_NAME = "dados-brutos"
+MINIO_HOST = f"minio:{MINIO_PORT}"  # Nome do serviço no Docker Compose
+DATASET_PATH = "/opt/airflow/datasets/datatran2025_amostra_100.csv"
+BUCKET_NAME = "acidentes"
 
 def main():
     # Conectar ao MinIO
-    s3 = boto3.resource(
-        "s3",
-        endpoint_url=MINIO_HOST,
-        aws_access_key_id=MINIO_USER,
-        aws_secret_access_key=MINIO_PASSWORD,
-        config=Config(signature_version="s3v4"),
-        region_name="us-east-1",
+    client = Minio(
+        MINIO_HOST,
+        access_key=MINIO_USER,
+        secret_key=MINIO_PASSWORD,
+        secure=False
     )
 
     # Criar bucket se não existir
-    if not s3.Bucket(BUCKET_NAME) in s3.buckets.all():
-        s3.create_bucket(Bucket=BUCKET_NAME)
+    found = client.bucket_exists(BUCKET_NAME)
+    if not found:
+        client.make_bucket(BUCKET_NAME)
         print(f"Bucket '{BUCKET_NAME}' criado.")
     else:
         print(f"Bucket '{BUCKET_NAME}' já existe.")
 
     # Fazer upload do CSV
     file_name = os.path.basename(DATASET_PATH)
-    s3.Bucket(BUCKET_NAME).upload_file(DATASET_PATH, file_name)
-    print(f"Arquivo '{file_name}' enviado para o bucket '{BUCKET_NAME}' com sucesso!")
+    try:
+        client.fput_object(BUCKET_NAME, file_name, DATASET_PATH)
+        print(f"Arquivo '{file_name}' enviado para o bucket '{BUCKET_NAME}' com sucesso!")
+    except S3Error as e:
+        print(f"Erro ao enviar arquivo: {e}")
 
 if __name__ == "__main__":
     main()

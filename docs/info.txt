@@ -1,17 +1,19 @@
-✅ 1. UTF-8
+docker exec -it airflow-webserver bash
 
-Nome completo: UTF-8 (Unicode Transformation Format — 8-bit)
+docker exec -it airflow-scheduler bash
 
-Identificador comum no Pandas: "utf-8"
+pip install pandas minio
 
-✅ 2. ISO-8859-1
+python dags/scripts/upload_minio.py
 
-Nome completo: ISO-8859-1 (Latin-1)
+airflow db upgrade
 
-Identificador comum no Pandas: "iso-8859-1"
+airflow dags unpause acidentes_2025_dag
 
-✅ 3. Windows-1252
+airflow dags trigger acidentes_2025_dag
 
-Nome completo: Windows-1252 (CP1252 — Western European)
+airflow dags list-runs -d acidentes_2025_dag
 
-Identificador comum no Pandas: "cp1252"
+airflow webserver -p 8081
+
+airflow tasks list acidentes_2025_dag
