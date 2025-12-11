@@ -1,174 +1,259 @@
-Documentação Técnica do Pipeline de Acidentes Rodoviários
+# Documentação do Pipeline
+Jefferson Nascimento -6324617
+Lucas Henrique- 6324537
+Marcelo Luis - 63424637
+Vinicius GIgante - 6324558
 
-1. Visão Geral e Introdução
+## 1. Introdução
 
-O projeto pipeline-indice-acidente implementa um pipeline completo de ETL (Extract, Transform, Load) para o processamento e análise de dados de acidentes de trânsito (DATATRAN 2025). O objetivo central é automatizar a coleta, transformação e armazenamento de dados estruturados, permitindo análises, relatórios e o cálculo de indicadores-chave, como o Índice de Acidentes por região.
+O projeto **pipeline-indicie-acidente** implementa um pipeline completo de ETL (Extract, Transform, Load), voltado ao processamento e análise de dados relacionados a acidentes de trânsito. O objetivo principal é automatizar a coleta, transformação e armazenamento de dados estruturados, possibilitando análises, relatórios e cálculos de indicadores como o Índice de Acidentes por município ou região. A arquitetura do projeto foi desenvolvida para ser **robusta e escalável**, utilizando contêineres Docker, banco de dados relacional e módulos Python modulares. Toda a estrutura foi pensada para facilitar execução, manutenção e evolução futura.
 
-A arquitetura foi concebida para ser robusta e escalável, utilizando a orquestração de contêineres Docker e módulos Python modulares, seguindo as melhores práticas de Engenharia de Dados.
+## 2. Arquitetura do Sistema
 
-2. Arquitetura do Sistema
+O sistema segue uma arquitetura em pipeline em ETL, composta por três estágios fundamentais:
 
-O sistema adota uma arquitetura de pipeline em ETL, orquestrada pelo Apache Airflow, e segue um modelo de Data Lakehouse simplificado, conforme detalhado abaixo.
+*   **Extração:** A fase responsável por buscar dados brutos externas, como arquivos CSV contidos na pasta `datasets`. A extração lê, valida e converte esses arquivos em estrutura de dados manipuláveis (DataFrames).
+*   **Transformações:** Os dados extraídos passam por processos de limpeza, padronização, enriquecimento e cálculos. Nesta fase é aplicado o cálculo do indicador principal: o índice de acidente, medida estática derivada dos dados de acidente e de informações demográficas.
+*   **Carregamento:** Por fim, os dados transformados são carregados em um banco relacional, garantindo persistência, integridade e disponibilidade para consultas. O carregamento utiliza SQLAlchemy e scripts do diretório `database`. A orquestração dessas etapas é feita pelo `main.py`, centralizando a execução.
 
-2.1. Fluxo do Pipeline
+## 3. Estrutura do Repositório
 
-O fluxo de processamento é dividido em etapas modulares, garantindo a rastreabilidade e o reprocessamento:
+A organização segue boas práticas de modularização e separação de responsabilidades, permitindo fácil manutenção e expansão do projeto:
 
-Etapa
-Task na DAG
-Módulo Python
-Descrição
-Extração
-ingest_task
-pipeline.py
-Lê o arquivo datatran2025.csv do volume mapeado.
-Validação
-validate_columns_task, validate_nulls_task
-transformacao.py
-Verifica a integridade dos dados (colunas obrigatórias e valores nulos críticos).
-Transformação
-transform_task
-transformacao.py
-Aplica limpeza, padronização de tipos e remoção de duplicatas.
-Carga
-load_task
-load.py
-Carrega o DataFrame limpo para a tabela datatran2025 no PostgreSQL.
-KPIs
-kpis_task
-kpis.py, load.py
-Calcula indicadores (ex: acidentes por período) e carrega o resultado para a tabela kpi_acidentes_por_periodo.
+*   **`docker`**: Contém Dockerfiles que definem o ambiente de execução do pipeline.
+*   **`database`**: Scripts SQL responsáveis por criar tabelas, índices e constraints.
+*   **`datasets`**: Fontes de dados utilizadas como entrada (CSV).
+*   **`docs`**: Documentação, diagramas e especificações.
+*   **`src`**: Código principal do ETL.
+*   **`docker-compose.yml`**: Orquestra todos os serviços e dependências.
+*   **`.env`**: Arquivo com variáveis sensíveis e configurações.
 
+## 4. Pasta SRC – Código do Pipeline
 
-2.2. Tecnologias e Componentes
+A pasta `src/` reúne os componentes principais do pipeline ETL, cada um com responsabilidades bem definidas, seguindo princípios de modularidade e boa arquitetura. Abaixo, uma descrição detalhada de cada arquivo:
 
-A infraestrutura é totalmente containerizada via Docker Compose:
+### `extract.py` : Módulo de Extração de Dados
 
-Componente
-Tecnologia
-Função
-Orquestração
-Apache Airflow
-Gerenciamento e agendamento do fluxo de trabalho (DAG).
-Data Lake
-MinIO
-Armazenamento de dados brutos (S3-compatível).
-Data Warehouse
-PostgreSQL
-Persistência de dados limpos e agregados.
-Processamento
-Python + Pandas
-Lógica de ETL e cálculo de KPIs.
-Visualização
-Metabase
-Business Intelligence (BI) e criação de dashboards.
+Responsável pela primeira etapa do pipeline, este arquivo contém funções dedicadas à leitura dos dados brutos localizados nos arquivos CSV.
 
+*   Utiliza `pandas.read_csv()` para carregar os conjuntos de dados.
+*   Realiza validações preliminares, como verificação de colunas obrigatórias e detecção de valores nulos.
+*   Garante que os dados cheguem à memória de forma organizada para as próximas etapas do processo.
 
-3. Estrutura do Repositório
+### `transform.py` — Módulo de Transformação
 
-A organização do projeto segue uma estrutura modular para facilitar a manutenção e a expansão:
+Este é o núcleo da lógica de negócio do projeto. Ele aplica as regras e operações que preparam os dados para gerar o Índice de Acidentes.
 
-Diretório
-Conteúdo
-database/
-Scripts SQL para criação de tabelas (create_table.sql) e views (create_views.sql).
-datasets/
-Fontes de dados brutos utilizadas como entrada (datatran2025.csv).
-docker/
-Dockerfiles e scripts de entrada para a construção das imagens personalizadas (Airflow, Python Testes).
-docs/
-Documentação, especificações e arquivos de progresso.
-src/
-Código principal do pipeline ETL e a definição da DAG.
-docker-compose.yml
-Orquestração de todos os serviços (PostgreSQL, Airflow, MinIO, Metabase).
-.env
-Variáveis de ambiente para configurações sensíveis e de conexão.
+Operações típicas realizadas:
 
+*   Conversão e padronização de datas.
+*   Normalização de colunas e tipos de dados.
+*   Remoção de inconsistências, duplicatas e erros de preenchimento.
+*   Aplicação de regras de limpeza específicas do domínio.
+*   Cálculos estatísticos e agrupamentos para criar indicadores estruturados.
 
-4. Módulos do Pipeline (src/)
+### `load.py` — Módulo de Carga no Banco de Dados
 
-A pasta src/ concentra a lógica de negócio do pipeline, com responsabilidades bem definidas:
+Este arquivo realiza a etapa final do ETL: a inserção dos dados tratados no banco relacional.
 
-Arquivo
-Responsabilidade
-acidentes_2025_dag.py
-Orquestrador: Define a DAG do Airflow, encadeando as tasks de Extração, Validação, Transformação, Carga e KPI.
-pipeline.py
-Extração: Contém a função load_csv para ler os dados brutos.
-transformacao.py
-Transformação e Validação: Contém a lógica de limpeza, padronização de tipos (normalize_types) e validação de dados (validate_columns, validate_nulls).
-load.py
-Carga: Contém a função load_to_postgres para persistir os DataFrames no banco de dados.
-kpis.py
-Cálculo de Indicadores: Contém funções para calcular métricas de negócio, como acidentes_por_periodo.
+Destaques:
 
+*   Estabelece conexão com o banco utilizando SQLAlchemy.
+*   Implementa tratamento de exceções e validações antes da gravação.
+*   Usa o método `to_sql()` para inserir os DataFrames diretamente nas tabelas.
+*   Garante integridade e consistência dos registros inseridos.
 
-5. Guia de Execução
+### `utils.py` — Funções Auxiliares
 
-5.1. Inicialização da Infraestrutura
+Reúne utilitários que dão suporte aos demais módulos, promovendo reutilização de código e padronização.
 
-1.
-Pré-requisitos: Docker e Docker Compose instalados.
+Funções comuns:
 
-2.
-Subir os Serviços: No diretório raiz do projeto, execute:
+*   Leitura e interpretação do arquivo `.env`.
+*   Configuração de logs e mensagens do sistema.
+*   Funções de formatação e validações auxiliares.
 
-Bash
+### `main.py` — Arquivo Orquestrador
 
+É o ponto de entrada do pipeline. Sua função é garantir que todas as etapas sejam executadas na ordem correta: **EXTRAÇÃO → TRANSFORMAÇÃO → CARGA**. Através dele, o processo se torna automatizado, organizado e reprodutível.
 
-docker-compose up -d
+## 5. Docker e Orquestração
 
+O Docker é empregado no projeto para garantir que o pipeline seja executado de maneira consistente, independentemente das configurações da máquina do usuário. Por meio da containerização, todo o ambiente necessário é padronizado, evitando problemas de compatibilidade e facilitando a reprodução do sistema.
 
+O arquivo `docker-compose.yml` é responsável por definir e orquestrar os principais contêineres, tais como:
 
+*   Banco de dados (PostgreSQL)
+*   Aplicação Python (Pipeline ETL)
+*   Volumes persistentes para armazenamento de dados
 
-5.2. Execução da DAG (Airflow)
+## 6. Como Rodar o Projeto
 
-1.
-Acessar a Interface Web: Acesse http://localhost:8080 (usuário/senha padrão: airflow/airflow ).
+O projeto utiliza Docker e Docker Compose para orquestrar todos os serviços necessários ao pipeline de acidentes, garantindo que tudo funcione de forma padronizada e independente do ambiente local.
 
-2.
-Ativar e Disparar: Ative a DAG acidentes_2025_dag e dispare uma execução manual.
+O arquivo `docker-compose.yml` define serviços como:
 
-5.3. Configuração do Metabase
+*   MinIO (Data Lake S3 compatível)
+*   PostgreSQL (Banco de dados relacional)
+*   Airflow (agendador e executor de DAGs)
+*   Contêiner Python responsável pelo pipeline ETL
+*   Volumes persistentes para armazenamento de dados
+*   Rede Docker interna
 
-1.
-Acessar o Metabase: Acesse http://localhost:3000 e complete a configuração inicial.
+### 1. Verifique se o Docker está instalado
 
-2.
-Adicionar o Banco de Dados: Configure a conexão com o PostgreSQL usando:
+É necessário ter:
 
-•
-Host: postgres
+*   Docker Engine
+*   Docker Compose
 
-•
-Database Name: airflow
+Basta rodar:
+```bash
+docker --version
+docker compose version
+```
 
-•
-User/Password: airflow/airflow
+### 2. Configure o arquivo `.env`
 
+O projeto depende de variáveis de ambiente como:
 
+*   `POSTGRES_USER`
+*   `POSTGRES_PASSWORD`
+*   `POSTGRES_DB`
+*   `MINIO_ROOT_USER`
+*   `MINIO_ROOT_PASSWORD`
+*   `MINIO_PORT`
+*   `MINIO_CONSOLE_PORT`
 
-3.
-Criar Views: Execute o script de views no container do PostgreSQL:
+Certifique-se de que o arquivo `.env` está preenchido corretamente.
 
-Bash
+### 3. Acesse a pasta raiz do projeto
 
+No terminal:
+```bash
+cd pipeline-indice-acidente-main
+```
 
-docker exec -it postgres psql -U airflow -d airflow -f /docker-entrypoint-initdb.d/create_views.sql
+### 4. Suba todos os serviços do pipeline
 
+Use o comando:
+```bash
+docker compose up –build
+```
 
+### 5. O que acontece neste passo:
 
+**5.1 – O Docker cria:**
 
-6. Considerações Finais
+*   Contêiner do MinIO
+*   Contêiner do PostgreSQL
+*   Contêiner do Airflow Scheduler
+*   Contêiner do Airflow Webserver
+*   Contêiner do Pipeline Python (execução da DAG)
 
-O projeto está tecnicamente completo em termos de código e arquitetura. A etapa final de criação dos dashboards no Metabase e a validação da execução da DAG dependem da correta sincronização dos volumes do Docker no ambiente local.
+**5.2 – O Docker cria e monta volumes:**
 
+*   `minio_data`
+*   `postgres_data`
+*   `datasets_data`
 
+**5.3 – Inicialização do Airflow**
 
+O Airflow sobe com:
 
+*   DAG `acidentes_2025_dag.py`
+*   Scheduler processando automaticamente o pipeline
+*   Webserver para monitoramento
 
+### 6. Acessar os contêineres do Airflow
 
+*   Para entrar no terminal do webserver:
+    ```bash
+    docker exec -it airflow-webserver bash
+    ```
+*   Para entrar no terminal do scheduler:
+    ```bash
+    docker exec -it airflow-scheduler bash
+    ```
 
+Esses comandos permitem rodar scripts, instalar dependências e manipular a DAG por dentro do Airflow.
 
+### 7. Instalar dependências necessárias
 
+Dentro de qualquer contêiner do Airflow:
+```bash
+pip install pandas minio
+```
+
+Essas bibliotecas são necessárias para:
+
+*   Leitura e manipulação dos dados (`pandas`)
+*   Integração com MinIO (`minio SDK`)
+
+### 8. Enviar arquivos para o MinIO
+
+Ainda dentro do contêiner:
+```bash
+python dags/scripts/upload_minio.py
+```
+
+Esse script faz o upload dos dados de acidentes para o bucket S3 compatível do MinIO.
+
+### Atualizar o banco do Airflow
+
+Para aplicar updates no schema interno do Airflow:
+```bash
+airflow db upgrade
+```
+
+### Ativar a DAG
+
+Por padrão, a DAG sobe pausada. Para ativá-la:
+```bash
+airflow dags unpause acidentes_2025_dag
+```
+
+### Disparar a DAG manualmente
+
+Para rodar imediatamente:
+```bash
+airflow dags trigger acidentes_2025_dag
+```
+
+### Verificar histórico de execuções
+
+Para checar se a DAG está sendo executada:
+```bash
+airflow dags list-runs -d acidentes_2025_dag
+```
+
+### Iniciar o Airflow Webserver manualmente (se necessário)
+
+```bash
+airflow webserver -p 8081
+```
+
+Isso é útil caso o webserver precise ser reiniciado.
+
+### Listar tarefas da DAG
+
+```bash
+airflow tasks list acidentes_2025_dag
+```
+
+### Testar cada tarefa individualmente
+
+Esses testes NÃO executam dependências, mas simulam a tarefa isolada.
+
+*   Testar a ingestão:
+    ```bash
+    airflow tasks test acidentes_2025_dag ingest_task 2025-12-10
+    ```
+*   Testar a limpeza:
+    ```bash
+    airflow tasks test acidentes_2025_dag clean_task 2025-12-10
+    ```
+*   Testar o cálculo de KPIs:
+    ```bash
+    airflow tasks test acidentes_2025_dag kpis_task 2025-12-10
+    ```
