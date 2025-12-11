@@ -18,6 +18,7 @@ services:
     volumes:
       - minio_data:/data
       - ./datasets:/opt/airflow/datasets
+      - ./politics/fullaccess.json:/etc/minio/politics/fullaccess.json
     networks:
       - data-network
 
@@ -68,6 +69,8 @@ services:
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
       PYTHONPATH: /opt/airflow/dags
       PYTHONWARNINGS: ignore::DeprecationWarning
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: ["airflow", "webserver"]
     volumes:
       - ./src:/opt/airflow/dags
@@ -94,6 +97,8 @@ services:
       AIRFLOW__CORE__FERNET_KEY: ${AIRFLOW__CORE__FERNET_KEY}
       PYTHONPATH: /opt/airflow/dags
       PYTHONWARNINGS: ignore::DeprecationWarning
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD}
     command: ["airflow", "scheduler"]
     volumes:
       - ./src:/opt/airflow/dags

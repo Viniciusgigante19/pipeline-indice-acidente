@@ -17,3 +17,7 @@ airflow dags list-runs -d acidentes_2025_dag
 airflow webserver -p 8081
 
 airflow tasks list acidentes_2025_dag
+
+airflow tasks test acidentes_2025_dag ingest_task 2025-12-10
+airflow tasks test acidentes_2025_dag clean_task  2025-12-10
+airflow tasks test acidentes_2025_dag kpis_task   2025-12-10

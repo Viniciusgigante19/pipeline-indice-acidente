@@ -607,3 +607,24 @@
 [2025-12-10T20:58:47.536+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:58:47.536+0000] {dag.py:3096} INFO - Sync 1 DAGs
 [2025-12-10T20:58:47.558+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:58:47.558+0000] {dag.py:3954} INFO - Setting next_dagrun for acidentes_2025_dag to 2025-12-10 00:00:00+00:00, run_after=2025-12-11 00:00:00+00:00
 [2025-12-10T20:58:47.583+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.719 seconds
+[2025-12-10T21:01:26.608+0000] {processor.py:161} INFO - Started process (PID=929) to work on /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T21:01:26.609+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/acidentes_2025_dag.py for tasks to queue
+[2025-12-10T21:01:26.612+0000] {logging_mixin.py:188} INFO - [2025-12-10T21:01:26.612+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T20:58:58.843+0000] {processor.py:840} INFO - DAG(s) 'acidentes_2025_dag' retrieved from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T20:58:58.863+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:58:58.863+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-12-10T20:58:58.886+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:58:58.886+0000] {dag.py:3954} INFO - Setting next_dagrun for acidentes_2025_dag to 2025-12-10 00:00:00+00:00, run_after=2025-12-11 00:00:00+00:00
+[2025-12-10T20:58:58.906+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.635 seconds
+[2025-12-10T21:01:30.776+0000] {processor.py:161} INFO - Started process (PID=935) to work on /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T21:01:30.778+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/acidentes_2025_dag.py for tasks to queue
+[2025-12-10T21:01:30.781+0000] {logging_mixin.py:188} INFO - [2025-12-10T21:01:30.781+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T20:59:02.480+0000] {processor.py:840} INFO - DAG(s) 'acidentes_2025_dag' retrieved from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T20:59:02.502+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:59:02.502+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-12-10T20:59:02.521+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:59:02.521+0000] {dag.py:3954} INFO - Setting next_dagrun for acidentes_2025_dag to 2025-12-10 00:00:00+00:00, run_after=2025-12-11 00:00:00+00:00
+[2025-12-10T20:59:02.551+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.683 seconds
+[2025-12-10T21:01:55.720+0000] {processor.py:161} INFO - Started process (PID=941) to work on /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T21:01:55.726+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/acidentes_2025_dag.py for tasks to queue
+[2025-12-10T21:01:55.730+0000] {logging_mixin.py:188} INFO - [2025-12-10T21:01:55.729+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T20:59:27.697+0000] {processor.py:840} INFO - DAG(s) 'acidentes_2025_dag' retrieved from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-10T20:59:27.721+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:59:27.721+0000] {dag.py:3096} INFO - Sync 1 DAGs
+[2025-12-10T20:59:27.740+0000] {logging_mixin.py:188} INFO - [2025-12-10T20:59:27.740+0000] {dag.py:3954} INFO - Setting next_dagrun for acidentes_2025_dag to 2025-12-10 00:00:00+00:00, run_after=2025-12-11 00:00:00+00:00
+[2025-12-10T20:59:27.762+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.991 seconds
