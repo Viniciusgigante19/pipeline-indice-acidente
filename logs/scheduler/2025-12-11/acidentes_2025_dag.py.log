@@ -2014,3 +2014,31 @@ Traceback (most recent call last):
 ModuleNotFoundError: No module named 'minio'
 [2025-12-11T02:03:28.667+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/acidentes_2025_dag.py
 [2025-12-11T02:03:28.686+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.049 seconds
+[2025-12-11T02:05:23.756+0000] {processor.py:161} INFO - Started process (PID=684) to work on /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-11T02:05:23.759+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/acidentes_2025_dag.py for tasks to queue
+[2025-12-11T02:05:23.762+0000] {logging_mixin.py:188} INFO - [2025-12-11T02:05:23.761+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-11T02:05:23.800+0000] {logging_mixin.py:188} INFO - [2025-12-11T02:05:23.794+0000] {dagbag.py:355} ERROR - Failed to import: /opt/airflow/dags/acidentes_2025_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 351, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/acidentes_2025_dag.py", line 9, in <module>
+    from minio import Minio
+ModuleNotFoundError: No module named 'minio'
+[2025-12-11T02:05:23.802+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-11T02:05:23.834+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.096 seconds
+[2025-12-11T02:03:50.051+0000] {processor.py:161} INFO - Started process (PID=689) to work on /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-11T02:03:50.054+0000] {processor.py:830} INFO - Processing file /opt/airflow/dags/acidentes_2025_dag.py for tasks to queue
+[2025-12-11T02:03:50.058+0000] {logging_mixin.py:188} INFO - [2025-12-11T02:03:50.057+0000] {dagbag.py:545} INFO - Filling up the DagBag from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-11T02:03:50.099+0000] {logging_mixin.py:188} INFO - [2025-12-11T02:03:50.090+0000] {dagbag.py:355} ERROR - Failed to import: /opt/airflow/dags/acidentes_2025_dag.py
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/dagbag.py", line 351, in parse
+    loader.exec_module(new_module)
+  File "<frozen importlib._bootstrap_external>", line 995, in exec_module
+  File "<frozen importlib._bootstrap>", line 488, in _call_with_frames_removed
+  File "/opt/airflow/dags/acidentes_2025_dag.py", line 9, in <module>
+    from minio import Minio
+ModuleNotFoundError: No module named 'minio'
+[2025-12-11T02:03:50.102+0000] {processor.py:842} WARNING - No viable dags retrieved from /opt/airflow/dags/acidentes_2025_dag.py
+[2025-12-11T02:03:50.134+0000] {processor.py:183} INFO - Processing /opt/airflow/dags/acidentes_2025_dag.py took 0.101 seconds
