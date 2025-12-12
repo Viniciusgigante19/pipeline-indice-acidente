@@ -1,0 +1,54 @@
+[2025-12-11T22:30:36.348+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-12-11T22:30:36.391+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:30:36.404+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:30:36.406+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-12-11T22:30:36.434+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): ingest_task> on 2025-12-10 00:00:00+00:00
+[2025-12-11T22:30:36.444+0000] {standard_task_runner.py:63} INFO - Started process 381 to run task
+[2025-12-11T22:30:36.447+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'acidentes_2025_dag', 'ingest_task', 'scheduled__2025-12-10T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/acidentes_2025_dag.py', '--cfg-path', '/tmp/tmpyo5n_zqw']
+[2025-12-11T22:30:36.451+0000] {standard_task_runner.py:91} INFO - Job 2: Subtask ingest_task
+[2025-12-11T22:30:36.518+0000] {task_command.py:426} INFO - Running <TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [running]> on host 1acff6baab76
+[2025-12-11T22:30:36.659+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='acidentes_2025_dag' AIRFLOW_CTX_TASK_ID='ingest_task' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-12-10T00:00:00+00:00'
+[2025-12-11T22:30:36.663+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-12-11T22:30:36.866+0000] {logging_mixin.py:188} INFO - CSV carregado com sucesso: 96 linhas
+[2025-12-11T22:30:37.110+0000] {python.py:237} INFO - Done. Returned value was: None
+[2025-12-11T22:30:37.111+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-12-11T22:30:37.123+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=acidentes_2025_dag, task_id=ingest_task, run_id=scheduled__2025-12-10T00:00:00+00:00, execution_date=20251210T000000, start_date=20251211T223036, end_date=20251211T223037
+[2025-12-11T22:30:37.183+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2025-12-11T22:30:37.229+0000] {taskinstance.py:3498} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2025-12-11T22:30:37.232+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
+[2025-12-11T22:51:17.590+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-12-11T22:51:17.657+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:51:17.671+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:51:17.672+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-12-11T22:51:17.710+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): ingest_task> on 2025-12-10 00:00:00+00:00
+[2025-12-11T22:51:17.730+0000] {standard_task_runner.py:63} INFO - Started process 256 to run task
+[2025-12-11T22:51:17.749+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'acidentes_2025_dag', 'ingest_task', 'scheduled__2025-12-10T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/acidentes_2025_dag.py', '--cfg-path', '/tmp/tmpp4gdevk6']
+[2025-12-11T22:51:17.756+0000] {standard_task_runner.py:91} INFO - Job 2: Subtask ingest_task
+[2025-12-11T22:51:18.050+0000] {task_command.py:426} INFO - Running <TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [running]> on host 5b9417971dae
+[2025-12-11T22:51:18.793+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='acidentes_2025_dag' AIRFLOW_CTX_TASK_ID='ingest_task' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-12-10T00:00:00+00:00'
+[2025-12-11T22:51:18.798+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-12-11T22:51:19.326+0000] {logging_mixin.py:188} INFO - CSV carregado com sucesso: 96 linhas
+[2025-12-11T22:51:19.534+0000] {python.py:237} INFO - Done. Returned value was: None
+[2025-12-11T22:51:19.604+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-12-11T22:51:19.661+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=acidentes_2025_dag, task_id=ingest_task, run_id=scheduled__2025-12-10T00:00:00+00:00, execution_date=20251210T000000, start_date=20251211T225117, end_date=20251211T225119
+[2025-12-11T22:51:19.736+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2025-12-11T22:51:19.803+0000] {taskinstance.py:3498} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2025-12-11T22:51:19.884+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
+[2025-12-11T23:01:34.814+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-12-11T23:01:34.847+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T23:01:34.854+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T23:01:34.855+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-12-11T23:01:34.865+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): ingest_task> on 2025-12-10 00:00:00+00:00
+[2025-12-11T23:01:34.876+0000] {standard_task_runner.py:63} INFO - Started process 246 to run task
+[2025-12-11T23:01:34.878+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'acidentes_2025_dag', 'ingest_task', 'scheduled__2025-12-10T00:00:00+00:00', '--job-id', '2', '--raw', '--subdir', 'DAGS_FOLDER/acidentes_2025_dag.py', '--cfg-path', '/tmp/tmpjvihwkuq']
+[2025-12-11T23:01:34.880+0000] {standard_task_runner.py:91} INFO - Job 2: Subtask ingest_task
+[2025-12-11T23:01:34.930+0000] {task_command.py:426} INFO - Running <TaskInstance: acidentes_2025_dag.ingest_task scheduled__2025-12-10T00:00:00+00:00 [running]> on host 85407185020d
+[2025-12-11T23:01:35.016+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='acidentes_2025_dag' AIRFLOW_CTX_TASK_ID='ingest_task' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-12-10T00:00:00+00:00'
+[2025-12-11T23:01:35.018+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-12-11T23:01:35.104+0000] {logging_mixin.py:188} INFO - CSV carregado com sucesso: 96 linhas
+[2025-12-11T23:01:35.206+0000] {python.py:237} INFO - Done. Returned value was: None
+[2025-12-11T23:01:35.207+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-12-11T23:01:35.229+0000] {taskinstance.py:1206} INFO - Marking task as SUCCESS. dag_id=acidentes_2025_dag, task_id=ingest_task, run_id=scheduled__2025-12-10T00:00:00+00:00, execution_date=20251210T000000, start_date=20251211T230134, end_date=20251211T230135
+[2025-12-11T23:01:35.252+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 0
+[2025-12-11T23:01:35.275+0000] {taskinstance.py:3498} INFO - 1 downstream tasks scheduled from follow-on schedule check
+[2025-12-11T23:01:35.277+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

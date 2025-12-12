@@ -1,0 +1,192 @@
+[2025-12-11T22:30:39.448+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-12-11T22:30:39.490+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:30:39.500+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:30:39.501+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-12-11T22:30:39.518+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): clean_task> on 2025-12-10 00:00:00+00:00
+[2025-12-11T22:30:39.528+0000] {standard_task_runner.py:63} INFO - Started process 385 to run task
+[2025-12-11T22:30:39.542+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'acidentes_2025_dag', 'clean_task', 'scheduled__2025-12-10T00:00:00+00:00', '--job-id', '3', '--raw', '--subdir', 'DAGS_FOLDER/acidentes_2025_dag.py', '--cfg-path', '/tmp/tmp7ysgzze_']
+[2025-12-11T22:30:39.551+0000] {standard_task_runner.py:91} INFO - Job 3: Subtask clean_task
+[2025-12-11T22:30:39.756+0000] {task_command.py:426} INFO - Running <TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [running]> on host 1acff6baab76
+[2025-12-11T22:30:40.072+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='acidentes_2025_dag' AIRFLOW_CTX_TASK_ID='clean_task' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-12-10T00:00:00+00:00'
+[2025-12-11T22:30:40.074+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-12-11T22:30:40.332+0000] {logging_mixin.py:188} INFO - CSV carregado com sucesso: 96 linhas
+[2025-12-11T22:30:40.351+0000] {logging_mixin.py:188} INFO - Colunas ausentes: {'horario', 'ignorados', 'feridos', 'uso_solo', 'br', 'fase_dia', 'km', 'causa_acidente', 'veiculos', 'mortos', 'classificacao_acidente', 'feridos_graves', 'uop', 'uf', 'ilesos', 'condicao_metereologica', 'feridos_leves', 'sentido_via', 'tipo_acidente', 'dia_semana', 'tipo_pista', 'id', 'latitude', 'delegacia', 'longitude', 'pessoas', 'data_inversa', 'municipio', 'tracado_via', 'regional'}
+[2025-12-11T22:30:40.352+0000] {logging_mixin.py:188} INFO - Colunas extras ignoradas: {'ï»¿"id",data_inversa,dia_semana,horario,uf,br,km,municipio,causa_acidente,tipo_acidente,classificacao_acidente,fase_dia,sentido_via,condicao_metereologica,tipo_pista,tracado_via,uso_solo,pessoas,mortos,feridos_leves,feridos_graves,ilesos,ignorados,feridos,veiculos,latitude,longitude,regional,delegacia,uop'}
+[2025-12-11T22:30:40.371+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-12-11T22:30:40.372+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3791, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 152, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 181, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 400, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/acidentes_2025_dag.py", line 46, in task_clean
+    df_clean = transform_pipeline(local_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/transformacao.py", line 91, in transform_pipeline
+    df = normalize_types(df)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/transformacao.py", line 53, in normalize_types
+    df['id'] = pd.to_numeric(df['id'], errors='coerce', downcast='integer')
+                             ~~^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/frame.py", line 3893, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3798, in get_loc
+    raise KeyError(key) from err
+KeyError: 'id'
+[2025-12-11T22:30:40.411+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=acidentes_2025_dag, task_id=clean_task, run_id=scheduled__2025-12-10T00:00:00+00:00, execution_date=20251210T000000, start_date=20251211T223039, end_date=20251211T223040
+[2025-12-11T22:30:40.434+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 3 for task clean_task ('id'; 385)
+[2025-12-11T22:30:40.481+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2025-12-11T22:30:40.506+0000] {taskinstance.py:3498} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-12-11T22:30:40.511+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
+[2025-12-11T22:51:23.689+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-12-11T22:51:23.730+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:51:23.746+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T22:51:23.747+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-12-11T22:51:23.768+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): clean_task> on 2025-12-10 00:00:00+00:00
+[2025-12-11T22:51:23.779+0000] {standard_task_runner.py:63} INFO - Started process 261 to run task
+[2025-12-11T22:51:23.782+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'acidentes_2025_dag', 'clean_task', 'scheduled__2025-12-10T00:00:00+00:00', '--job-id', '3', '--raw', '--subdir', 'DAGS_FOLDER/acidentes_2025_dag.py', '--cfg-path', '/tmp/tmpn8q0kt3w']
+[2025-12-11T22:51:23.787+0000] {standard_task_runner.py:91} INFO - Job 3: Subtask clean_task
+[2025-12-11T22:51:23.879+0000] {task_command.py:426} INFO - Running <TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [running]> on host 5b9417971dae
+[2025-12-11T22:51:24.062+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='acidentes_2025_dag' AIRFLOW_CTX_TASK_ID='clean_task' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-12-10T00:00:00+00:00'
+[2025-12-11T22:51:24.064+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-12-11T22:51:24.186+0000] {logging_mixin.py:188} INFO - CSV carregado com sucesso: 96 linhas
+[2025-12-11T22:51:24.196+0000] {logging_mixin.py:188} INFO - Colunas ausentes: {'pessoas', 'regional', 'causa_acidente', 'km', 'dia_semana', 'br', 'feridos_graves', 'mortos', 'uf', 'latitude', 'delegacia', 'ilesos', 'sentido_via', 'data_inversa', 'classificacao_acidente', 'condicao_metereologica', 'municipio', 'tracado_via', 'longitude', 'uop', 'feridos', 'horario', 'tipo_acidente', 'feridos_leves', 'veiculos', 'fase_dia', 'id', 'ignorados', 'uso_solo', 'tipo_pista'}
+[2025-12-11T22:51:24.198+0000] {logging_mixin.py:188} INFO - Colunas extras ignoradas: {'id,data_inversa,dia_semana,horario,uf,br,km,municipio,causa_acidente,tipo_acidente,classificacao_acidente,fase_dia,sentido_via,condicao_metereologica,tipo_pista,tracado_via,uso_solo,pessoas,mortos,feridos_leves,feridos_graves,ilesos,ignorados,feridos,veiculos,latitude,longitude,regional,delegacia,uop'}
+[2025-12-11T22:51:24.202+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-12-11T22:51:24.203+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3791, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 152, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 181, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 400, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/acidentes_2025_dag.py", line 46, in task_clean
+    df_clean = transform_pipeline(local_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/transformacao.py", line 91, in transform_pipeline
+    df = normalize_types(df)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/transformacao.py", line 53, in normalize_types
+    df['id'] = pd.to_numeric(df['id'], errors='coerce', downcast='integer')
+                             ~~^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/frame.py", line 3893, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3798, in get_loc
+    raise KeyError(key) from err
+KeyError: 'id'
+[2025-12-11T22:51:24.238+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=acidentes_2025_dag, task_id=clean_task, run_id=scheduled__2025-12-10T00:00:00+00:00, execution_date=20251210T000000, start_date=20251211T225123, end_date=20251211T225124
+[2025-12-11T22:51:24.255+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 3 for task clean_task ('id'; 261)
+[2025-12-11T22:51:24.279+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2025-12-11T22:51:24.305+0000] {taskinstance.py:3498} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-12-11T22:51:24.355+0000] {local_task_job_runner.py:222} INFO - ::endgroup::
+[2025-12-11T23:01:37.117+0000] {local_task_job_runner.py:120} INFO - ::group::Pre task execution logs
+[2025-12-11T23:01:37.150+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=non-requeueable deps ti=<TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T23:01:37.158+0000] {taskinstance.py:2076} INFO - Dependencies all met for dep_context=requeueable deps ti=<TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [queued]>
+[2025-12-11T23:01:37.159+0000] {taskinstance.py:2306} INFO - Starting attempt 1 of 1
+[2025-12-11T23:01:37.171+0000] {taskinstance.py:2330} INFO - Executing <Task(PythonOperator): clean_task> on 2025-12-10 00:00:00+00:00
+[2025-12-11T23:01:37.178+0000] {standard_task_runner.py:63} INFO - Started process 249 to run task
+[2025-12-11T23:01:37.180+0000] {standard_task_runner.py:90} INFO - Running: ['***', 'tasks', 'run', 'acidentes_2025_dag', 'clean_task', 'scheduled__2025-12-10T00:00:00+00:00', '--job-id', '3', '--raw', '--subdir', 'DAGS_FOLDER/acidentes_2025_dag.py', '--cfg-path', '/tmp/tmp4ci5udzx']
+[2025-12-11T23:01:37.183+0000] {standard_task_runner.py:91} INFO - Job 3: Subtask clean_task
+[2025-12-11T23:01:37.250+0000] {task_command.py:426} INFO - Running <TaskInstance: acidentes_2025_dag.clean_task scheduled__2025-12-10T00:00:00+00:00 [running]> on host 85407185020d
+[2025-12-11T23:01:37.322+0000] {taskinstance.py:2648} INFO - Exporting env vars: AIRFLOW_CTX_DAG_OWNER='***' AIRFLOW_CTX_DAG_ID='acidentes_2025_dag' AIRFLOW_CTX_TASK_ID='clean_task' AIRFLOW_CTX_EXECUTION_DATE='2025-12-10T00:00:00+00:00' AIRFLOW_CTX_TRY_NUMBER='1' AIRFLOW_CTX_DAG_RUN_ID='scheduled__2025-12-10T00:00:00+00:00'
+[2025-12-11T23:01:37.323+0000] {taskinstance.py:430} INFO - ::endgroup::
+[2025-12-11T23:01:37.438+0000] {logging_mixin.py:188} INFO - CSV carregado com sucesso: 96 linhas
+[2025-12-11T23:01:37.446+0000] {logging_mixin.py:188} INFO - Colunas ausentes: {'uf', 'tracado_via', 'id', 'uso_solo', 'mortos', 'feridos_leves', 'latitude', 'pessoas', 'veiculos', 'fase_dia', 'sentido_via', 'feridos_graves', 'regional', 'causa_acidente', 'tipo_acidente', 'feridos', 'data_inversa', 'condicao_metereologica', 'tipo_pista', 'ilesos', 'classificacao_acidente', 'uop', 'dia_semana', 'municipio', 'delegacia', 'km', 'longitude', 'br', 'ignorados', 'horario'}
+[2025-12-11T23:01:37.448+0000] {logging_mixin.py:188} INFO - Colunas extras ignoradas: {'id,data_inversa,dia_semana,horario,uf,br,km,municipio,causa_acidente,tipo_acidente,classificacao_acidente,fase_dia,sentido_via,condicao_metereologica,tipo_pista,tracado_via,uso_solo,pessoas,mortos,feridos_leves,feridos_graves,ilesos,ignorados,feridos,veiculos,latitude,longitude,regional,delegacia,uop'}
+[2025-12-11T23:01:37.452+0000] {taskinstance.py:441} INFO - ::group::Post task execution logs
+[2025-12-11T23:01:37.453+0000] {taskinstance.py:2905} ERROR - Task failed with exception
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3791, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "index.pyx", line 152, in pandas._libs.index.IndexEngine.get_loc
+  File "index.pyx", line 181, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7080, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas/_libs/hashtable_class_helper.pxi", line 7088, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'id'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 465, in _execute_task
+    result = _execute_callable(context=context, **execute_callable_kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/taskinstance.py", line 432, in _execute_callable
+    return execute_callable(context=context, **execute_callable_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/models/baseoperator.py", line 400, in wrapper
+    return func(self, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 235, in execute
+    return_value = self.execute_callable()
+                   ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/airflow/operators/python.py", line 252, in execute_callable
+    return self.python_callable(*self.op_args, **self.op_kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/acidentes_2025_dag.py", line 46, in task_clean
+    df_clean = transform_pipeline(local_path)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/transformacao.py", line 91, in transform_pipeline
+    df = normalize_types(df)
+         ^^^^^^^^^^^^^^^^^^^
+  File "/opt/airflow/dags/transformacao.py", line 53, in normalize_types
+    df['id'] = pd.to_numeric(df['id'], errors='coerce', downcast='integer')
+                             ~~^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/frame.py", line 3893, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/airflow/.local/lib/python3.12/site-packages/pandas/core/indexes/base.py", line 3798, in get_loc
+    raise KeyError(key) from err
+KeyError: 'id'
+[2025-12-11T23:01:37.485+0000] {taskinstance.py:1206} INFO - Marking task as FAILED. dag_id=acidentes_2025_dag, task_id=clean_task, run_id=scheduled__2025-12-10T00:00:00+00:00, execution_date=20251210T000000, start_date=20251211T230137, end_date=20251211T230137
+[2025-12-11T23:01:37.498+0000] {standard_task_runner.py:110} ERROR - Failed to execute job 3 for task clean_task ('id'; 249)
+[2025-12-11T23:01:37.514+0000] {local_task_job_runner.py:240} INFO - Task exited with return code 1
+[2025-12-11T23:01:37.541+0000] {taskinstance.py:3498} INFO - 0 downstream tasks scheduled from follow-on schedule check
+[2025-12-11T23:01:37.546+0000] {local_task_job_runner.py:222} INFO - ::endgroup::

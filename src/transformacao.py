@@ -17,10 +17,17 @@ CRITICAL_COLUMNS = [
 ]
 
 def load_csv(file_path: str):
-    """Carrega CSV e retorna DataFrame."""
+    """Carrega CSV e retorna DataFrame com colunas esperadas."""
     try:
-        df = pd.read_csv(file_path, sep=';')
+        df = pd.read_csv(
+            file_path,
+            sep=';', 
+            encoding="utf-8-sig",
+            header=None,              # não usa nenhuma linha como cabeçalho
+            names=EXPECTED_COLUMNS    # aplica os nomes corretos
+        )
         print(f"CSV carregado com sucesso: {len(df)} linhas")
+        print(f"Colunas aplicadas: {df.columns.tolist()}")
         return df
     except Exception as e:
         print(f"Erro ao carregar CSV: {e}")
